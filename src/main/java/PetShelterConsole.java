@@ -22,30 +22,35 @@ public class PetShelterConsole {
             System.out.print("Choose an option: ");
 
             if (!scanner.hasNextInt()) {
-                System.out.println("Invalid input, please try again.");
+                System.out.println("Invalid input, please enter a number.");
                 scanner.next();
                 continue;
             }
 
-            int choice = scanner.nextInt();
+            int userInput = scanner.nextInt();
             scanner.nextLine();
 
-            switch (choice) {
-                case 1:
+            Menu option = Menu.fromInt(userInput);
+
+            if (option == null) {
+                System.out.println("Invalid input, please try again.");
+                continue;
+            }
+
+            switch (option) {
+                case Menu.ADD_PET:
                     addPet();
                     break;
-                case 2:
+                case SHOW_ALL:
                     showAllPets();
                     break;
-                case 3:
+                case REMOVE_PET:
                     removePet();
                     break;
-                case 4:
+                case EXIT:
                     running = false;
                     System.out.println("Exiting the program...");
                     break;
-                default:
-                    System.out.println("Invalid input, please try again.");
             }
         }
     }
