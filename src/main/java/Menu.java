@@ -1,24 +1,39 @@
 public enum Menu {
-    ADD_PET(1),
-    SHOW_ALL(2),
-    REMOVE_PET(3),
-    EXIT(4);
+    ADD_PET(1, "Add a pet"),
+    SHOW_ALL(2, "View all pets"),
+    REMOVE_PET(3, "Adopt a pet"),
+    EXIT(4, "Exit");
 
-    private final int value;
+    private final int option;
+    private final String description;
 
-    Menu(int value) {
-    this.value = value;}
-
-    public int getValue() {
-        return value;
+    Menu(int option, String description) {
+        this.option = option;
+        this.description = description;
     }
-    public static Menu fromInt(int input) {
+
+    public int getOption() {
+        return option;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public static Menu fromInt(int userInput) {
         for (Menu menu : values()) {
-            if (menu.getValue() == input) {
+            if (menu.option == userInput) {
                 return menu;
             }
         }
         return null;
+    }
 
+    public static void printMenu() {
+        System.out.println("\n--- Shelter Menu ---");
+        for (Menu menu : values()) {
+            System.out.println(menu.option + ". " + menu.description);
+        }
+        System.out.print("Choose an option: ");
     }
 }

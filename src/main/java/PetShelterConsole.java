@@ -14,15 +14,10 @@ public class PetShelterConsole {
         boolean running = true;
 
         while (running) {
-            System.out.println("\n--- Shelter Menu ---");
-            System.out.println("1. Add a pet");
-            System.out.println("2. View all pets");
-            System.out.println("3. Adopt a pet");
-            System.out.println("4. Exit");
-            System.out.print("Choose an option: ");
+            Menu.printMenu();
 
             if (!scanner.hasNextInt()) {
-                System.out.println("Invalid input, please enter a number.");
+                System.out.println(Message.INVALID_INPUT.getText());
                 scanner.next();
                 continue;
             }
@@ -33,12 +28,12 @@ public class PetShelterConsole {
             Menu option = Menu.fromInt(userInput);
 
             if (option == null) {
-                System.out.println("Invalid input, please try again.");
+                System.out.println(Message.INVALID_INPUT.getText());
                 continue;
             }
 
             switch (option) {
-                case Menu.ADD_PET:
+                case ADD_PET:
                     addPet();
                     break;
                 case SHOW_ALL:
@@ -49,21 +44,21 @@ public class PetShelterConsole {
                     break;
                 case EXIT:
                     running = false;
-                    System.out.println("Exiting the program...");
+                    System.out.println(Message.EXITING.getText());
                     break;
             }
         }
     }
 
     private void addPet() {
-        System.out.print("Enter the pet's name: ");
+        System.out.print(Message.ENTER_PET_NAME.getText());
         String name = scanner.nextLine();
-        System.out.print("Enter the breed: ");
+        System.out.print(Message.ENTER_BREED.getText());
         String breed = scanner.nextLine();
-        System.out.print("Enter the age: ");
+        System.out.print(Message.ENTER_AGE.getText());
 
         if (!scanner.hasNextInt()) {
-            System.out.println("Error: Age must be a number.");
+            System.out.println(Message.AGE_MUST_BE_NUMBER.getText());
             scanner.next();
             return;
         }
@@ -72,8 +67,35 @@ public class PetShelterConsole {
         scanner.nextLine();
 
         petService.addPet(name, age, breed);
-        System.out.println("The pet has been added to the shelter!");
+        System.out.println(Message.PET_ADDED.getText());
     }
+
+    private void removePet() {
+        List<Pet> pets = petService.getAllPets();
+        if (pets.isEmpty()) {
+            System.out.println(Message.NO_PETS.getText());
+            return;
+        }
+
+        showAllPets();
+        System.out.print(Message.ENTER_PET_NUMBER.getText());
+
+        if (!scanner.hasNextInt()) {
+            System.out.println(Message.INVALID_INPUT.getText());
+            scanner.next();
+            return;
+        }
+
+        int petIndex = scanner.nextInt() - 1;
+        scanner.nextLine();
+
+        if (petService.removePet(petIndex)) {
+            System.out.println(Message.PET_ADOPTED.getText());
+        } else {
+            System.out.println(Message.INVALID_SELECTION.getText());
+        }
+    }
+
 
     private void showAllPets() {
         List<Pet> pets = petService.getAllPets();
@@ -85,30 +107,5 @@ public class PetShelterConsole {
             }
         }
     }
-
-    private void removePet() {
-        List<Pet> pets = petService.getAllPets();
-        if (pets.isEmpty()) {
-            System.out.println("There are no pets in the shelter.");
-            return;
-        }
-
-        showAllPets();
-        System.out.print("Enter the number of the pet to adopt: ");
-
-        if (!scanner.hasNextInt()) {
-            System.out.println("Error: Please enter a number.");
-            scanner.next();
-            return;
-        }
-
-        int petIndex = scanner.nextInt() - 1;
-        scanner.nextLine();
-
-        if (petService.removePet(petIndex)) {
-            System.out.println("The pet has been adopted from the shelter!");
-        } else {
-            System.out.println("Invalid selection.");
-        }
-    }
 }
+
